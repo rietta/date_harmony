@@ -31,7 +31,7 @@ class DateHarmony
     ]
   
   
-  def parse_aggresively(dv)
+  def parse_date_time(dv)
     day_info = nil
     begin
       
@@ -74,6 +74,20 @@ class DateHarmony
       #else
       #  day_info = DateTime.parse(dv)
       #end
+      
+      match_found = false
+      DATE_TIME_PATTERNS.each do |pattern_item|
+        if (dv =~ pattern_item[0])
+          match_found = true
+          day_info = DateTime.strptime(pattern_item[1])
+        end
+      end
+      
+      # If no match was found, see if the date object can parse this itself.
+      # This will probably fail.
+      unless match_found
+        day_info = DateTime.parse(dv)
+      end
    
     rescue
       day_info = nil
